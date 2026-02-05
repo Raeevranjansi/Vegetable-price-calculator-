@@ -4,53 +4,138 @@
 <meta charset="UTF-8">
 <title>सब्जी दाम कैलकुलेटर</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- PWA support -->
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#2e7d32">
+
 <style>
-body{font-family:sans-serif;background:#f2f2f2;padding:15px;}
-.box{background:#fff;padding:20px;border-radius:12px;max-width:420px;margin:auto;box-shadow:0 0 10px #aaa;}
-h2{text-align:center;color:#2e7d32;}
-label{font-weight:bold;display:block;margin-top:12px;}
-.row{display:flex;gap:10px;}
-input{width:100%;padding:10px;font-size:18px;margin-top:5px;}
-button{width:100%;padding:12px;margin-top:18px;font-size:18px;background:#2e7d32;color:white;border:none;border-radius:8px;}
-.result{margin-top:20px;background:#fff3cd;padding:15px;border-radius:10px;font-size:22px;text-align:center;font-weight:bold;}
-.small{font-size:14px;color:#555;}
+body{
+  font-family: sans-serif;
+  background:#f2f2f2;
+  padding:15px;
+}
+.box{
+  background:#ffffff;
+  padding:20px;
+  border-radius:12px;
+  max-width:420px;
+  margin:auto;
+  box-shadow:0 0 10px #aaa;
+}
+h2{
+  text-align:center;
+  color:#2e7d32;
+}
+label{
+  font-weight:bold;
+  display:block;
+  margin-top:12px;
+}
+.row{
+  display:flex;
+  gap:10px;
+}
+input{
+  width:100%;
+  padding:10px;
+  font-size:18px;
+  margin-top:5px;
+}
+button{
+  width:100%;
+  padding:12px;
+  margin-top:18px;
+  font-size:18px;
+  background:#2e7d32;
+  color:white;
+  border:none;
+  border-radius:8px;
+}
+.result{
+  margin-top:20px;
+  background:#fff3cd;
+  padding:15px;
+  border-radius:10px;
+  font-size:22px;
+  text-align:center;
+  font-weight:bold;
+}
+.small{
+  font-size:14px;
+  color:#555;
+}
 </style>
 </head>
+
 <body>
+
 <div class="box">
 <h2>🧮 सब्जी दाम कैलकुलेटर</h2>
 
 <label>दुकानदार का बताया दाम (₹)</label>
-<input type="number" id="price">
+<input type="number" id="price" placeholder="जैसे 100">
 
 <label>इस दाम में मात्रा</label>
 <div class="row">
-<div><span class="small">किलो</span><input type="number" id="sellerKg"></div>
-<div><span class="small">ग्राम</span><input type="number" id="sellerGm"></div>
+  <div style="flex:1">
+    <span class="small">किलो</span>
+    <input type="number" id="sellerKg" placeholder="जैसे 1">
+  </div>
+  <div style="flex:1">
+    <span class="small">ग्राम</span>
+    <input type="number" id="sellerGm" placeholder="जैसे 500">
+  </div>
 </div>
 
 <label>आप कितनी मात्रा लेना चाहते हैं</label>
 <div class="row">
-<div><span class="small">किलो</span><input type="number" id="buyKg"></div>
-<div><span class="small">ग्राम</span><input type="number" id="buyGm"></div>
+  <div style="flex:1">
+    <span class="small">किलो</span>
+    <input type="number" id="buyKg" placeholder="जैसे 0">
+  </div>
+  <div style="flex:1">
+    <span class="small">ग्राम</span>
+    <input type="number" id="buyGm" placeholder="जैसे 250">
+  </div>
 </div>
 
 <button onclick="calculate()">दाम निकालें</button>
-<div class="result" id="output">कुल दाम: ₹ 0</div>
+
+<div class="result" id="output">
+कुल दाम: ₹ 0
+</div>
 </div>
 
 <script>
 function calculate(){
- let price=parseFloat(priceEl.value)||0;
- let sellerGram=(parseFloat(sellerKg.value)||0)*1000+(parseFloat(sellerGm.value)||0);
- let buyerGram=(parseFloat(buyKg.value)||0)*1000+(parseFloat(buyGm.value)||0);
- if(price<=0||sellerGram<=0||buyerGram<=0){alert("सही जानकारी भरें");return;}
- let total=(price/sellerGram)*buyerGram;
- output.innerText="कुल दाम: ₹ "+total.toFixed(2);
+  let price = parseFloat(document.getElementById("price").value) || 0;
+
+  let sKg = parseFloat(document.getElementById("sellerKg").value) || 0;
+  let sGm = parseFloat(document.getElementById("sellerGm").value) || 0;
+
+  let bKg = parseFloat(document.getElementById("buyKg").value) || 0;
+  let bGm = parseFloat(document.getElementById("buyGm").value) || 0;
+
+  let sellerGram = (sKg * 1000) + sGm;
+  let buyerGram  = (bKg * 1000) + bGm;
+
+  if(price <= 0 || sellerGram <= 0 || buyerGram <= 0){
+    alert("कृपया दाम और मात्रा सही भरें");
+    return;
+  }
+
+  let total = (price / sellerGram) * buyerGram;
+
+  document.getElementById("output").innerText =
+    "कुल दाम: ₹ " + total.toFixed(2);
 }
-if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}
 </script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js');
+}
+</script>
+
 </body>
 </html>
